@@ -17,4 +17,17 @@ python app.py
 
 L'interface sera accessible sur `http://localhost:7860`.
 
-Remarque: L'application `app.py` ici propose une démo OCR locale. Pour intégrer la logique complète (Tensorlake, extraction structurée), fournissez la clé API et j'intègrerai l'appel dans `app.py`.
+Remarque: L'application `app.py` propose une démo OCR locale.
+
+Intégration Tensorlake:
+
+- Placez votre clé API dans la variable d'environnement `TENSORLAKE_API_KEY` avant d'exécuter l'app localement, par exemple:
+
+```bash
+export TENSORLAKE_API_KEY="tl_apiKey_..."   # macOS / Linux
+setx TENSORLAKE_API_KEY "tl_apiKey_..."    # Windows (PowerShell may require $env:...)
+```
+
+- Sur Hugging Face Spaces, définissez un secret (Settings → Secrets) nommé `TENSORLAKE_API_KEY`.
+
+Lorsque la clé est présente, l'application tentera d'appeler Tensorlake pour obtenir une extraction structurée et affichera le résultat JSON dans l'interface.

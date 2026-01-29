@@ -3,6 +3,8 @@ import gradio as gr
 from PIL import Image
 import pytesseract
 from pdf2image import convert_from_path
+import json
+import traceback
 
 
 def extract_text_with_ocr(file_path):
@@ -43,14 +45,44 @@ def detect_doc_type_local_from_text(text, filename=""):
 
 def process_file(uploaded_file):
     if uploaded_file is None:
-        return "", "No file provided"
+        return "", "No file provided", {}
 
     # uploaded_file is a tempfile path when running in Gradio
     file_path = uploaded_file.name if hasattr(uploaded_file, 'name') else uploaded_file
     text = extract_text_with_ocr(file_path)
     doc_type = detect_doc_type_local_from_text(text, file_path)
 
-    return doc_type, text
+    # Attempt Tensorlake structured extraction if API key is present
+    structured_result = None
+    api_key = os.environ.get('TENSORLAKE_API_KEY')
+    if api_key:
+        try:
+            # Import locally to avoid hard dependency when not used
+            from tensorlake.documentai import DocumentAI, StructuredExtractionOptions, ParseStatus
+
+            doc_ai = DocumentAI(api_key=api_key)
+            file_id = doc_ai.upload(file_path)
+
+            # If doc_type is unknown, use a generic schema name (e.g., cv) or let the service infer
+            schema_name = doc_type if doc_type != 'unknown' else None
+            structured_options = StructuredExtractionOptions(schema_name=schema_name) if schema_name else StructuredExtractionOptions()
+
+            result = doc_ai.parse_and_wait(file_id, structured_extraction_options=[structured_options])
+            if result.status == ParseStatus.SUCCESSFUL:
+                sd = result.structured_data
+                # Convert Pydantic models to plain data if necessary
+                if isinstance(sd, list):
+                    structured_result = [s.model_dump() if hasattr(s, 'model_dump') else s for s in sd]
+                else:
+                    structured_result = sd.model_dump() if hasattr(sd, 'model_dump') else sd
+            else:
+                structured_result = {"error": f"Parse status: {result.status}"}
+        except Exception as e:
+            structured_result = {"error": str(e), "trace": traceback.format_exc()}
+    else:
+        structured_result = {"info": "TENSORLAKE_API_KEY not set; structured extraction skipped"}
+
+    return doc_type, text, structured_result
 
 
 with gr.Blocks() as demo:
@@ -60,8 +92,9 @@ with gr.Blocks() as demo:
         with gr.Column():
             out_type = gr.Textbox(label="Detected document type")
             out_text = gr.Textbox(label="Extracted text", lines=20)
+            out_struct = gr.JSON(label="Structured extraction (Tensorlake)")
 
-    inp.change(fn=process_file, inputs=inp, outputs=[out_type, out_text])
+    inp.change(fn=process_file, inputs=inp, outputs=[out_type, out_text, out_struct])
 
 
 if __name__ == '__main__':
