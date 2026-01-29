@@ -3,6 +3,7 @@ import gradio as gr
 from PIL import Image
 import pytesseract
 from pdf2image import convert_from_path
+import os
 import json
 import traceback
 
@@ -10,8 +11,16 @@ import traceback
 def extract_text_with_ocr(file_path):
     """Extract text from PDF or image using pytesseract."""
     try:
+        # Allow overriding tesseract and poppler paths via environment variables
+        tesseract_cmd = os.environ.get('TESSERACT_CMD')
+        if tesseract_cmd:
+            pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+
+        poppler_path = os.environ.get('POPPLER_PATH')
+
         if file_path.lower().endswith('.pdf'):
-            pages = convert_from_path(file_path, 200)
+            # pass poppler_path if provided (Windows)
+            pages = convert_from_path(file_path, 200, poppler_path=poppler_path) if poppler_path else convert_from_path(file_path, 200)
             texts = []
             for p in pages:
                 texts.append(pytesseract.image_to_string(p, lang='fra+eng'))
