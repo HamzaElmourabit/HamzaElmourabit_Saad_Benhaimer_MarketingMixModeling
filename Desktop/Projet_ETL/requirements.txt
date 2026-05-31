@@ -1,9 +1,0 @@
-gradio
-pytesseract
-pdf2image
-Pillow
-pydantic
-pandas
-matplotlib
-seaborn
-tensorlake
