@@ -1,0 +1,18 @@
+date,event_type,event_name,impact_level,description
+2024-01-01,holiday,New Year,HIGH,Major holidays typically see reduced marketing effectiveness
+2024-02-14,event,Valentine Day,MEDIUM,Consumer spending spike
+2024-03-17,event,St Patrick Day,LOW,Varies by region
+2024-05-25,holiday,Memorial Day,MEDIUM,Long weekend advertising window
+2024-07-04,holiday,Independence Day,MEDIUM,Long weekend advertising window
+2024-09-02,holiday,Labor Day,MEDIUM,Long weekend advertising window
+2024-11-28,event,Thanksgiving,HIGH,Major consumer spending period
+2024-11-29,event,Black Friday,CRITICAL,Highest consumer spending day of year
+2024-12-01,event,Cyber Monday,CRITICAL,Major e-commerce event
+2024-12-25,holiday,Christmas,HIGH,Major holiday period
+2024-12-26,event,Boxing Day,MEDIUM,Post-holiday sales period
+2024-12-31,holiday,New Years Eve,MEDIUM,End of year festivities
+2024-03-10,event,Daylight Saving Time,LOW,Clock adjustment may affect behavioral patterns
+2024-11-10,event,Veterans Day,LOW,Military-focused promotions
+2024-10-31,event,Halloween,MEDIUM,Seasonal consumer spending
+2024-03-08,event,International Womens Day,MEDIUM,Retail and brand marketing focus
+2024-06-19,event,Juneteenth,MEDIUM,Federal holiday with retail implications
