@@ -1,41 +1,122 @@
-# MMM Project - Marketing Mix Modeling (MMM)
+# 🎯 Marketing Mix Modeling (MMM) — Projet Complet
 
-## 🚀 Overview
+[![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/streamlit-1.28.1-FF4B4B)](https://streamlit.io)
+[![Scikit-learn](https://img.shields.io/badge/scikit--learn-1.3.2-F7931E)](https://scikit-learn.org)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-Ce projet implémente une solution complète de Marketing Mix Modeling (MMM) avec attribution multi-touch, modélisation Bayésienne et visualisation analytique.
+Système end-to-end pour analyser l'efficacité des canaux marketing, estimer les contributions des dépenses publicitaires et simuler des scénarios budgétaires.
 
-Le pipeline couvre :
-- ingestion et nettoyage des données marketing et commerciales
-- enrichissement calendrier et événements
-- ingénierie des features MMM (adstock, lags, saturations, interactions)
-- normalisation des variables pour amélioration de la modélisation
-- chargement de la table transformée dans BigQuery
-- dashboard Streamlit pour le reporting
-- intégration de dashboards Looker embarqués
+## 📚 Documentation Complète
 
-## 🏛️ Architecture du projet
-![Architecture du pipeline](Assets/architecture_mmm.png)
+Trois niveaux de documentation sont disponibles :
 
-```text
-[Data Source] --> [ETL Pipeline] --> [Processed CSV + BigQuery] --> [Visualization]
-                                              |                     |
-                                              v                     v
-                                          [Bayesian MMM]       [Streamlit App]
-                                                                 [Looker Embed]
+| Document | Contenu | Format | Usage |
+|----------|---------|--------|-------|
+| **[README.md](README.md)** (ce fichier) | Vue d'ensemble générale | Markdown | Introduction rapide |
+| **[ARCHITECTURE.md](ARCHITECTURE.md)** | Architecture détaillée, flux ETL, pipeline, technologies | Markdown | Compréhension technique complète |
+| **[MMM_Report_Final.tex](MMM_Report_Final.tex)** | Rapport professionnel ~30 pages avec images réelles | LaTeX/PDF | Reporting executive, publication |
+
+## 🚀 Démarrage Rapide
+
+### Installation (5 minutes)
+
+```bash
+# 1. Clone ou télécharger le projet
+cd MMM_Project
+
+# 2. Créer environment virtuel
+python -m venv venv
+source venv/bin/activate  # ou: venv\Scripts\activate (Windows)
+
+# 3. Installer les dépendances
+pip install -r requirements.txt
+
+# 4. Configurer environnement
+cp .env.example .env
+# Éditer .env avec vos paramètres (BigQuery, Looker, etc.)
 ```
+
+### Lancer le Dashboard (2 minutes)
+
+```bash
+streamlit run dashboard/app.py
+# Accès : http://localhost:8501
+```
+
+### Exécuter le Pipeline ETL (15 minutes)
+
+```bash
+# Première exécution : données brutes → données prêtes
+python run_pipeline.py
+
+# Options :
+python run_pipeline.py --validate-only    # Validation uniquement
+python run_pipeline.py --clean-only       # Nettoyage uniquement
+python run_pipeline.py --bigquery         # + Export BigQuery
+```
+
+**Résultat** : `data/processed/mmm_ready.csv` (utilisé par le dashboard)
+
+---
+
+## 🏗️ Architecture Globale
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    MMM SYSTEM ARCHITECTURE                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Raw Data             ETL Pipeline          Processed Data     │
+│  └─ compressed_data   ├─ validation         └─ mmm_ready.csv   │
+│     .csv              ├─ cleaning                               │
+│                       ├─ event_enrichment                       │
+│                       ├─ feature_engineering (adstock, sat)     │
+│                       ├─ normalization                          │
+│                       └─ export                                 │
+│                             ↓                                   │
+│                    ┌────────┴────────┐                          │
+│                    ↓                 ↓                          │
+│              Models              Dashboard                      │
+│         (mmm_model.py)      (Streamlit app.py)                 │
+│         └─ Ridge Regression  ├─ Dashboard (KPIs)               │
+│            · Training         ├─ Channels Analysis              │
+│            · Attribution      ├─ Budget Scenarios               │
+│            · Prediction       ├─ Attribution                    │
+│                                ├─ Looker Embed                  │
+│                                └─ Configuration                 │
+│                                       ↓                         │
+│                    ┌──────────────────┴────────────┐            │
+│                    ↓                               ↓            │
+│                BigQuery                      PDF Report         │
+│           (Analytics DB)                   (MMM_Report.pdf)    │
+│         └─ mmm table                    with real images       │
+│            (for Looker)                 & technologies         │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+Pour la **documentation architecture détaillée** → voir [ARCHITECTURE.md](ARCHITECTURE.md)
 
 ### Illustrations clés
 
+![Architecture du pipeline](Assets/architecture_mmm.png)  
+**Figure 1** : Architecture MMM — Pipeline ETL complet (ingestion → modélisation → dashboard)
 
-![Interface dashboard](Assets/Interface_dashboard.png)
+![Interface dashboard](Assets/Interface_dashboard.png)  
+**Figure 2** : Interface Streamlit — Vue principale du dashboard avec KPIs et tendances
 
-![Attribution multi-touch](Assets/Attribution_multi_touch.png)
+![Attribution multi-touch](Assets/Attribution_multi_touch.png)  
+**Figure 3** : Attribution multi-touch — Breakdown des contributions par canal marketing
 
-![Scénarios budgétaires](Assets/Budget_Scenarios_What_if.png)
+![Scénarios budgétaires](Assets/Budget_Scenarios_What_if.png)  
+**Figure 4** : Simulations budgétaires — What-if analysis avec sliders et prédictions
 
-![ROI global](Assets/ROI_Global.png)
+![ROI global](Assets/ROI_Global.png)  
+**Figure 5** : ROI global — Vue synthétique de la performance par canal
 
-![Top 5 canaux dépensiers](Assets/Top_5_canaux_les_plus_dépensiers.png)
+![Top 5 canaux dépensiers](Assets/Top_5_canaux_les_plus_dépensiers.png)  
+**Figure 6** : Top 5 canaux — Ranking des dépenses marketing par canal
 
 ### Composants principaux
 
@@ -266,3 +347,101 @@ pytest
 Hamza Elmourabit 
 Saad Benhaimer
 Projet Marketing Mix Modeling : pipeline Data, modèle, dashboard et intégration BI.
+
+---
+
+## ⚡ Exécution Pas à Pas
+
+### 1️⃣ Pré-requis
+
+- Python 3.8+
+- Données brutes : `data/raw/compressed_data.csv`
+- (Optionnel) Compte GCP pour BigQuery
+- (Optionnel) Instance Looker pour dashboards
+
+### 2️⃣ Installation
+
+```bash
+pip install -r requirements.txt
+cp .env.example .env
+# Éditer .env avec credentials
+```
+
+### 3️⃣ Pipeline ETL
+
+```bash
+python run_pipeline.py
+# ✅ Output: data/processed/mmm_ready.csv
+```
+
+### 4️⃣ Dashboard Streamlit
+
+```bash
+streamlit run dashboard/app.py
+# Accès: http://localhost:8501
+```
+
+### 5️⃣ Rapport LaTeX (optionnel)
+
+```bash
+pdflatex MMM_Report_Final.tex
+pdflatex MMM_Report_Final.tex
+# ✅ Output: MMM_Report_Final.pdf
+```
+
+### 6️⃣ BigQuery (optionnel)
+
+```bash
+# Charger dans BigQuery (si configuré dans .env)
+python run_pipeline.py --bigquery
+```
+
+---
+
+## 📈 Workflow Exemple : Simuler un Budget
+
+1. **Ouvrir le dashboard**
+   ```bash
+   streamlit run dashboard/app.py
+   ```
+
+2. **Aller à la page « Scénarios »**
+
+3. **Ajuster les sliders** pour proposer un nouveau budget par canal
+
+4. **Observer la prédiction de revenu** basée sur le modèle entraîné
+
+5. **Comparer** avec le scénario baseline
+
+6. **Exporter** les résultats
+
+Temps total : **~10 minutes**
+
+---
+
+## ✅ Checklist Mise en Production
+
+- [ ] Données brutes validées
+- [ ] Pipeline ETL exécutée avec succès
+- [ ] Modèle MMM entraîné et validé
+- [ ] Dashboard Streamlit testé localement
+- [ ] BigQuery configuré et chargé (optionnel)
+- [ ] Looker dashboards créés (optionnel)
+- [ ] Rapport PDF généré
+- [ ] `.env` configuré avec credentials
+- [ ] Tests unitaires passent : `pytest`
+
+---
+
+## 🎯 Navigation Rapide
+
+- 🚀 [Démarrage Rapide](#-démarrage-rapide) — Installation et lancement en 5 minutes
+- 🏗️ [Architecture Globale](#-architecture-globale) — Vue d'ensemble du système
+- 📂 [Structure des Fichiers](#-structure-des-fichiers) — Organisation du projet
+- 🔄 [Pipeline ETL](#-pipeline-etl-expliqué) — Transformation des données
+- 🤖 [Modélisation](#-modélisation--ridge-regression) — Approche statistique
+- 📊 [Dashboard](#-dashboard-streamlit) — Interface interactive
+- 🛠️ [Technologies](#-technologies--stack) — Stack technologique
+- 📚 [Documentation](#-documentation-supplémentaire) — Ressources avancées
+
+**Commencer maintenant** : [Démarrage Rapide](#-démarrage-rapide) ⬆️
