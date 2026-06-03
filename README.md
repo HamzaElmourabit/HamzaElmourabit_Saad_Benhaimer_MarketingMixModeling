@@ -95,7 +95,60 @@ python run_pipeline.py --bigquery         # + Export BigQuery
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
+graph TD
+    %% Style Global
+    classDef source fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    classDef process fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef model fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+    classDef output fill:#e8f5e9,stroke:#388e3c,stroke-width:2px;
 
+    %% Nœuds de données brutes
+    subgraph Raw_Data [Données Brutes]
+        A[compressed_data.csv]
+        A2[holidays.csv / reference]
+    end
+    class Raw_Data source;
+
+    %% Pipeline ETL
+    subgraph ETL_Pipeline [Pipeline ETL]
+        B[Validation] --> C[Nettoyage & Uniformisation]
+        C --> D[Enrichissement Événements]
+        D --> E[Feature Engineering <br> Adstock & Saturation]
+        E --> F[Normalisation / Scaling]
+    end
+    class ETL_Pipeline process;
+
+    %% Données transformées
+    G[(mmm_ready.csv)]
+    class G process;
+
+    %% Consommateurs
+    subgraph Modeling_Layer [Modélisation & Simulation]
+        H[Ridge Regression / PyMC]
+        H1[Attribution Multi-Touch]
+        H2[What-If Simulation]
+    end
+    class Modeling_Layer model;
+
+    subgraph Viz_Layer [Visualisation & Business Intelligence]
+        I[Streamlit App]
+        J[(BigQuery Analytics)]
+        K[Looker Embed]
+    end
+    class Viz_Layer output;
+
+    L[Rapport Synthèse PDF / LaTeX]
+    class L output;
+
+    %% Connexions
+    Raw_Data --> B
+    F --> G
+    G --> H
+    G --> I
+    G --> J
+    J --> K
+    H --> I
+    I --> L
 Pour la **documentation architecture détaillée** → voir [ARCHITECTURE.md](ARCHITECTURE.md)
 
 ### Illustrations clés
