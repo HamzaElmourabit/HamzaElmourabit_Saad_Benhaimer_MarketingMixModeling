@@ -1,4 +1,4 @@
-# 🎯 Marketing Mix Modeling (MMM) — Projet Complet
+# 🎯 Marketing Mix Modeling (MMM) avec attribution multi_touch — Projet Complet
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/streamlit-1.28.1-FF4B4B)](https://streamlit.io)
