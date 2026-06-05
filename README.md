@@ -96,7 +96,37 @@ python run_pipeline.py --bigquery         # + Export BigQuery
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-Pour la **documentation architecture détaillée** → voir [ARCHITECTURE.md](ARCHITECTURE.md)
+```mermaid
+flowchart LR
+
+A[Raw Marketing Data] --> B[Validation Layer]
+B --> C[Cleaning Layer]
+C --> D[Feature Engineering]
+
+D --> E[Adstock Transformation]
+D --> F[Saturation Modeling]
+D --> G[Seasonality & Events]
+
+E --> H[MMM Dataset]
+F --> H
+G --> H
+
+H --> I[ML Models]
+I --> J[Ridge Regression MMM]
+I --> K[Bayesian MMM]
+
+J --> L[Channel Attribution]
+K --> L
+
+L --> M[Budget Optimization]
+L --> N[Scenario Simulation]
+
+M --> O[Streamlit Dashboard]
+N --> O
+
+H --> P[BigQuery]
+P --> Q[Looker Studio]
+
 
 ### Illustrations clés
 
