@@ -119,7 +119,7 @@ Pour la **documentation architecture détaillée** → voir [ARCHITECTURE.md](AR
 **Figure 6** : Top 5 canaux — Ranking des dépenses marketing par canal
 
 ![Dashboard_Looker](Assets/Dashboard_Looker.png)
-**Figure 7** : Looker_Dashboard
+**Figure 7** : Lokker_Dashboard
 
 ### Composants principaux
 
