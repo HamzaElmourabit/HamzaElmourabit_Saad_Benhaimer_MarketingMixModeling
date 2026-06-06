@@ -111,7 +111,7 @@ Cette section présente des diagrammes complémentaires (format Mermaid et ASCII
 ![Attribution multi-touch](Assets/Attribution_multi_touch.png)  
 **Figure 3** : Attribution multi-touch — Breakdown des contributions par canal marketing
 
-![Scénarios budgétaires](Assets/Budget_Scenarios_What_if.png)  
+![Scénarios budgétaires](Assets/Scénario_What_if.png)  
 **Figure 4** : Simulations budgétaires — What-if analysis avec sliders et prédictions
 
 ![ROI global](Assets/ROI_Global.png)  
